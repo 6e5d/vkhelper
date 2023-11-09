@@ -36,7 +36,7 @@ void vkhelper_create_imageview(
 void vkhelper_image_new(
 	VkhelperImage* output,
 	VkDevice device,
-	VkPhysicalDeviceMemoryProperties pdev_memprop,
+	VkPhysicalDeviceMemoryProperties memprop,
 	uint32_t width,
 	uint32_t height,
 	VkFormat format
@@ -66,7 +66,7 @@ void vkhelper_image_new(
 		.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
 		.allocationSize = reqs.size,
 		.memoryTypeIndex = vkhelper_memory_type_index(
-			pdev_memprop,
+			memprop,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 			reqs.memoryTypeBits
 		),

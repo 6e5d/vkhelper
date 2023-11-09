@@ -4,13 +4,14 @@
 
 #include "../include/scsi.h"
 
-VkhelperScsi vkhelper_scsi(
+void vkhelper_scsi(
+	VkSurfaceFormatKHR* format,
+	VkSurfaceCapabilitiesKHR* caps,
 	VkPhysicalDevice pdev,
 	VkSurfaceKHR surface
 ) {
-	VkhelperScsi result;
 	assert(0 == vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
-		pdev, surface, &result.caps));
+		pdev, surface, caps));
 	uint32_t formatCount;
 	assert(0 == vkGetPhysicalDeviceSurfaceFormatsKHR(
 		pdev, surface, &formatCount, NULL));
@@ -20,11 +21,10 @@ VkhelperScsi vkhelper_scsi(
 	bool flag = false;
 	for (uint32_t i = 0; i < formatCount; i++) {
 		if (formats[i].format == VK_FORMAT_B8G8R8A8_UNORM) {
-			result.format = formats[i];
+			*format = formats[i];
 			flag = true;
 			break;
 		}
 	}
 	assert(flag);
-	return result;
 }

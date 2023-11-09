@@ -20,7 +20,7 @@ typedef struct {
 void vkhelper_image_new(
 	VkhelperImage* output,
 	VkDevice device,
-	VkPhysicalDeviceMemoryProperties pdev_memprop,
+	VkPhysicalDeviceMemoryProperties memprop,
 	uint32_t width,
 	uint32_t height,
 	VkFormat format

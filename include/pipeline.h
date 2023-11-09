@@ -14,17 +14,18 @@ typedef struct {
 	VkPipelineColorBlendAttachmentState cba;
 	VkPipelineColorBlendStateCreateInfo cb;
 	VkPipelineLayoutCreateInfo pl;
-} VkbasicPipelineConf;
+} VkhelperPipelineConf;
 
-VkbasicPipelineConf* vkbasic_pipeline_configure(
+void vkhelper_pipeline_configure(
+	VkhelperPipelineConf* conf,
 	VkShaderModule vert,
 	VkShaderModule frag
 );
 
-void vkbasic_pipeline_standard(
+void vkhelper_pipeline_standard(
 	VkPipeline* pipeline,
 	VkPipelineLayout* pipelinelayout,
-	VkbasicPipelineConf* conf,
+	VkhelperPipelineConf* conf,
 	VkRenderPass renderpass,
 	VkDevice device
 );

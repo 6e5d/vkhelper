@@ -3,21 +3,20 @@
 #include <stdlib.h>
 
 uint32_t vkhelper_memory_type_index(
-	VkPhysicalDeviceMemoryProperties pdev_memprop,
+	VkPhysicalDeviceMemoryProperties memprop,
 	VkMemoryPropertyFlags props,
 	uint32_t type
 ) {
-	for (uint32_t i = 0; i < pdev_memprop.memoryTypeCount; i++) {
+	for (uint32_t i = 0; i < memprop.memoryTypeCount; i++) {
 		if ((type & 1) == 1) {
-			VkMemoryType* ty = &pdev_memprop.memoryTypes[i];
-			// printf("%d %d\n", props, ty->propertyFlags);
+			VkMemoryType* ty = &memprop.memoryTypes[i];
 			if ((ty->propertyFlags & props) == props) {
 				return i;
 			}
 		}
 		type >>= 1;
 	}
-	printf("no suitable memory type\n");
+	printf("no suitable memory type %u\n", props);
 	exit(1);
 }
 

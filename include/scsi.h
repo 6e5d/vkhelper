@@ -3,13 +3,9 @@
 
 #include <vulkan/vulkan.h>
 
-// swapchain support info
-typedef struct {
-	VkSurfaceFormatKHR format;
-	VkSurfaceCapabilitiesKHR caps;
-} VkhelperScsi;
-
-VkhelperScsi vkhelper_scsi(
+void vkhelper_scsi(
+	VkSurfaceFormatKHR* format,
+	VkSurfaceCapabilitiesKHR* caps,
 	VkPhysicalDevice pdev,
 	VkSurfaceKHR surface
 );

@@ -4,13 +4,12 @@
 
 #include "../include/pipeline.h"
 
-VkbasicPipelineConf* vkbasic_pipeline_configure(
+void vkhelper_pipeline_configure(
+	VkhelperPipelineConf* conf,
 	VkShaderModule vert,
 	VkShaderModule frag
 ) {
 	VkStructureType e; // save big enum
-
-	VkbasicPipelineConf* conf = malloc(sizeof(VkbasicPipelineConf));
 	VkPipelineShaderStageCreateInfo ss_vert = {
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
 		.stage = VK_SHADER_STAGE_VERTEX_BIT,
@@ -122,7 +121,7 @@ VkbasicPipelineConf* vkbasic_pipeline_configure(
 		.front.compareOp = VK_COMPARE_OP_ALWAYS,
 	};
 
-	*conf = (VkbasicPipelineConf) {
+	*conf = (VkhelperPipelineConf) {
 		.ss_vert = ss_vert,
 		.ss_frag = ss_frag,
 		.vis = vis,
@@ -140,13 +139,12 @@ VkbasicPipelineConf* vkbasic_pipeline_configure(
 	conf->viewport_state.pViewports = &conf->viewport,
 	conf->viewport_state.pScissors = &conf->scissor,
 	conf->cb.pAttachments = &conf->cba;
-	return conf;
 }
 
-void vkbasic_pipeline_standard(
+void vkhelper_pipeline_standard(
 	VkPipeline* pipeline,
 	VkPipelineLayout* pipelinelayout,
-	VkbasicPipelineConf* conf,
+	VkhelperPipelineConf* conf,
 	VkRenderPass renderpass,
 	VkDevice device
 ) {
