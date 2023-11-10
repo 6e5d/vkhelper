@@ -38,21 +38,7 @@ void vkhelper_pipeline_configure(
 		.primitiveRestartEnable = VK_FALSE,
 	};
 
-	VkViewport viewport = {
-		.x = 0.0f,
-		.y = 0.0f,
-		.width = 900.0f,
-		.height = 600.0f,
-		.minDepth = 0.0f,
-		.maxDepth = 1.0f,
-	};
-
-	VkRect2D scissor = {
-		.offset = {0, 0},
-		.extent = {99999, 99999},
-	};
-
-	VkPipelineViewportStateCreateInfo viewport_state = {
+	VkPipelineViewportStateCreateInfo vsc = {
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
 		.viewportCount = 1,
 		.scissorCount = 1,
@@ -121,23 +107,33 @@ void vkhelper_pipeline_configure(
 		.front.compareOp = VK_COMPARE_OP_ALWAYS,
 	};
 
+	VkPipelineDynamicStateCreateInfo dsi = {
+		.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
+		.pNext = NULL,
+		.flags = 0,
+		.dynamicStateCount = 2,
+	};
+
 	*conf = (VkhelperPipelineConf) {
 		.ss_vert = ss_vert,
 		.ss_frag = ss_frag,
 		.vis = vis,
 		.ias = ias,
-		.viewport = viewport,
-		.scissor = scissor,
-		.viewport_state = viewport_state,
+		.vsc = vsc,
 		.rasterizer = rasterizer,
 		.multisampling = multisampling,
 		.depthstencil = depthstencil,
 		.cba = cba,
 		.cb = cb,
 		.pl = pl,
+		.dsi = dsi,
+		.dss = {
+			VK_DYNAMIC_STATE_VIEWPORT,
+			VK_DYNAMIC_STATE_SCISSOR,
+		},
 	};
-	conf->viewport_state.pViewports = &conf->viewport,
-	conf->viewport_state.pScissors = &conf->scissor,
+
+	conf->dsi.pDynamicStates = conf->dss;
 	conf->cb.pAttachments = &conf->cba;
 }
 
@@ -157,11 +153,12 @@ void vkhelper_pipeline_standard(
 		.stageCount = 2,
 		.pVertexInputState = &conf->vis,
 		.pInputAssemblyState = &conf->ias,
-		.pViewportState = &conf->viewport_state,
+		.pViewportState = &conf->vsc,
 		.pRasterizationState = &conf->rasterizer,
 		.pMultisampleState = &conf->multisampling,
 		.pDepthStencilState = &conf->depthstencil,
 		.pColorBlendState = &conf->cb,
+		.pDynamicState = &conf->dsi,
 		.pStages = stages,
 		.layout = *pipelinelayout,
 		.renderPass = renderpass,

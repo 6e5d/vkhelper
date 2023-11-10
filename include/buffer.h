@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 typedef struct {
+	VkDeviceSize real_size;
 	VkDeviceMemory memory;
 	VkBuffer buffer;
 	VkDeviceSize size;
@@ -16,6 +17,7 @@ typedef struct {
 void vkhelper_buffer_init(
 	VkhelperBuffer* buffer,
 	VkDeviceSize size,
+	VkBufferUsageFlags flags,
 	VkDevice device,
 	VkPhysicalDeviceMemoryProperties pdev_memprop
 );
@@ -27,10 +29,18 @@ void vkhelper_buffer_deinit(
 
 void vkhelper_buffer_map(
 	VkDevice device,
-	void* target,
+	void** target,
 	VkhelperBuffer *buffer
 );
 
 void vkhelper_buffer_unmap(VkDevice device, VkhelperBuffer *buffer);
+
+void vkhelper_buffer_sync(
+	VkhelperBuffer* buf,
+	VkDeviceSize size,
+	VkDevice device,
+	VkQueue queue,
+	VkCommandPool cpool
+);
 
 #endif

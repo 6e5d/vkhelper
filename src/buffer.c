@@ -8,7 +8,8 @@
 // render buffer
 void vkhelper_buffer_init(
 	VkhelperBuffer* buffer,
-	VkDeviceSize size, // the actual size may be different
+	VkDeviceSize size,
+	VkBufferUsageFlags flags,
 	VkDevice device,
 	VkPhysicalDeviceMemoryProperties memprop
 ) {
@@ -38,8 +39,7 @@ void vkhelper_buffer_init(
 	assert(0 == vkAllocateMemory(
 		device, &alloc_info, NULL, &buffer->smemory));
 
-	info.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT |
-		VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+	info.usage = flags | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 	assert(0 == vkCreateBuffer(
 		device, &info, NULL, &buffer->buffer));
 	vkGetBufferMemoryRequirements(device, buffer->buffer, &reqs);
@@ -72,7 +72,7 @@ void vkhelper_buffer_deinit(
 
 void vkhelper_buffer_map(
 	VkDevice device,
-	void* target,
+	void** target,
 	VkhelperBuffer* buffer
 ) {
 	assert(0 == vkMapMemory(
@@ -83,4 +83,53 @@ void vkhelper_buffer_unmap(VkDevice device, VkhelperBuffer *buffer) {
 	vkUnmapMemory(device, buffer->smemory);
 	assert(0 == vkBindBufferMemory(
 		device, buffer->sbuffer, buffer->smemory, 0));
+}
+
+// sync, so it is slow, for initialization only
+void vkhelper_buffer_sync(
+	VkhelperBuffer* buf,
+	VkDeviceSize size,
+	VkDevice device,
+	VkQueue queue,
+	VkCommandPool cpool
+) {
+	VkCommandBuffer copyCmd;
+	VkCommandBufferAllocateInfo cmdBufAllocateInfo = {
+		.sType =
+			VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+		.commandPool = cpool,
+		.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+		.commandBufferCount = 1,
+	};
+	assert(0 == vkAllocateCommandBuffers(
+		device, &cmdBufAllocateInfo, &copyCmd));
+
+	VkCommandBufferBeginInfo cmdBufInfo = {
+		.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+		.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
+	};
+	assert(0 == vkBeginCommandBuffer(copyCmd, &cmdBufInfo));
+	VkBufferCopy copyRegion = {.size = size};
+	vkCmdCopyBuffer(copyCmd, buf->sbuffer, buf->buffer,
+		1, &copyRegion);
+	assert(0 == vkEndCommandBuffer(copyCmd));
+
+	VkSubmitInfo submitInfo = {
+		.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+		.commandBufferCount = 1,
+		.pCommandBuffers = &copyCmd,
+	};
+
+	// Create fence to ensure that the command buffer has finished executing
+	VkFenceCreateInfo fenceCI = {
+		.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+		.flags = 0,
+	};
+	VkFence fence;
+	assert(0 == vkCreateFence(device, &fenceCI, NULL, &fence));
+	assert(0 == vkQueueSubmit(queue, 1, &submitInfo, fence));
+	assert(0 == vkWaitForFences(device, 1, &fence, VK_TRUE, 1000000000));
+
+	vkDestroyFence(device, fence, NULL);
+	vkFreeCommandBuffers(device, cpool, 1, &copyCmd);
 }

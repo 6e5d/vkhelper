@@ -5,14 +5,14 @@ typedef struct {
 	VkPipelineShaderStageCreateInfo ss_frag;
 	VkPipelineVertexInputStateCreateInfo vis;
 	VkPipelineInputAssemblyStateCreateInfo ias;
-	VkViewport viewport;
-	VkRect2D scissor;
-	VkPipelineViewportStateCreateInfo viewport_state;
+	VkPipelineViewportStateCreateInfo vsc;
 	VkPipelineRasterizationStateCreateInfo rasterizer;
 	VkPipelineMultisampleStateCreateInfo multisampling;
 	VkPipelineDepthStencilStateCreateInfo depthstencil;
 	VkPipelineColorBlendAttachmentState cba;
 	VkPipelineColorBlendStateCreateInfo cb;
+	VkPipelineDynamicStateCreateInfo dsi;
+	VkDynamicState dss[2];
 	VkPipelineLayoutCreateInfo pl;
 } VkhelperPipelineConf;
 
