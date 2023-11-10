@@ -38,6 +38,8 @@ void vkhelper_buffer_init(
 	};
 	assert(0 == vkAllocateMemory(
 		device, &alloc_info, NULL, &buffer->smemory));
+	assert(0 == vkBindBufferMemory(
+		device, buffer->sbuffer, buffer->smemory, 0));
 
 	info.usage = flags | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 	assert(0 == vkCreateBuffer(
@@ -68,21 +70,6 @@ void vkhelper_buffer_deinit(
 	vkFreeMemory(device, buffer->memory, NULL);
 	vkDestroyBuffer(device, buffer->sbuffer, NULL);
 	vkFreeMemory(device, buffer->smemory, NULL);
-}
-
-void vkhelper_buffer_map(
-	VkDevice device,
-	void** target,
-	VkhelperBuffer* buffer
-) {
-	assert(0 == vkMapMemory(
-		device, buffer->smemory, 0, buffer->ssize, 0, target));
-}
-
-void vkhelper_buffer_unmap(VkDevice device, VkhelperBuffer *buffer) {
-	vkUnmapMemory(device, buffer->smemory);
-	assert(0 == vkBindBufferMemory(
-		device, buffer->sbuffer, buffer->smemory, 0));
 }
 
 // sync, so it is slow, for initialization only

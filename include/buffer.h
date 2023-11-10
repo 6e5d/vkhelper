@@ -27,14 +27,6 @@ void vkhelper_buffer_deinit(
 	VkDevice device
 );
 
-void vkhelper_buffer_map(
-	VkDevice device,
-	void** target,
-	VkhelperBuffer *buffer
-);
-
-void vkhelper_buffer_unmap(VkDevice device, VkhelperBuffer *buffer);
-
 void vkhelper_buffer_sync(
 	VkhelperBuffer* buf,
 	VkDeviceSize size,
