@@ -1,4 +1,5 @@
 #include <vulkan/vulkan.h>
+#include <stdint.h>
 
 typedef struct {
 	VkPipelineShaderStageCreateInfo ss_vert;
@@ -27,5 +28,6 @@ void vkhelper_pipeline_standard(
 	VkPipelineLayout* pipelinelayout,
 	VkhelperPipelineConf* conf,
 	VkRenderPass renderpass,
-	VkDevice device
+	VkDevice device,
+	uint32_t subpass
 );

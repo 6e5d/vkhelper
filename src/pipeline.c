@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <vulkan/vulkan.h>
 
 #include "../include/pipeline.h"
@@ -69,7 +70,13 @@ void vkhelper_pipeline_configure(
 			VK_COLOR_COMPONENT_G_BIT |
 			VK_COLOR_COMPONENT_B_BIT |
 			VK_COLOR_COMPONENT_A_BIT,
-		.blendEnable = VK_FALSE,
+		.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA,
+		.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+		.colorBlendOp = VK_BLEND_OP_ADD,
+		.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE,
+		.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO,
+		.alphaBlendOp = VK_BLEND_OP_ADD,
+		.blendEnable = VK_TRUE,
 	};
 
 	e = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -142,7 +149,8 @@ void vkhelper_pipeline_standard(
 	VkPipelineLayout* pipelinelayout,
 	VkhelperPipelineConf* conf,
 	VkRenderPass renderpass,
-	VkDevice device
+	VkDevice device,
+	uint32_t subpass
 ) {
 	VkPipelineShaderStageCreateInfo stages[] =
 		{conf->ss_vert, conf->ss_frag};
@@ -162,7 +170,7 @@ void vkhelper_pipeline_standard(
 		.pStages = stages,
 		.layout = *pipelinelayout,
 		.renderPass = renderpass,
-		.subpass = 0,
+		.subpass = subpass,
 		.basePipelineHandle = VK_NULL_HANDLE,
 	};
 	assert(0 == vkCreateGraphicsPipelines(
