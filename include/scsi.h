@@ -1,5 +1,5 @@
-#ifndef _VKBASIC_SCSIH
-#define _VKBASIC_SCSIH
+#ifndef INCLUDEGUARD_VKBASIC_SCSIH
+#define INCLUDEGUARD_VKBASIC_SCSIH
 
 #include <vulkan/vulkan.h>
 

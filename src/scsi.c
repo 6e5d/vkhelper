@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <vulkan/vulkan.h>
 
 #include "../include/scsi.h"
@@ -12,14 +13,15 @@ void vkhelper_scsi(
 ) {
 	assert(0 == vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
 		pdev, surface, caps));
-	uint32_t formatCount;
+	uint32_t count;
 	assert(0 == vkGetPhysicalDeviceSurfaceFormatsKHR(
-		pdev, surface, &formatCount, NULL));
-	VkSurfaceFormatKHR formats[formatCount];
+		pdev, surface, &count, NULL));
+	VkSurfaceFormatKHR* formats = malloc(
+		count * sizeof(VkSurfaceFormatKHR));
 	assert(0 == vkGetPhysicalDeviceSurfaceFormatsKHR(
-		pdev, surface, &formatCount, formats));
+		pdev, surface, &count, formats));
 	bool flag = false;
-	for (uint32_t i = 0; i < formatCount; i++) {
+	for (uint32_t i = 0; i < count; i++) {
 		if (formats[i].format == VK_FORMAT_B8G8R8A8_UNORM) {
 			*format = formats[i];
 			flag = true;

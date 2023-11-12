@@ -8,7 +8,9 @@
 void vkhelper_pipeline_configure(
 	VkhelperPipelineConf* conf,
 	VkShaderModule vert,
-	VkShaderModule frag
+	VkShaderModule frag,
+	uint32_t width,
+	uint32_t height
 ) {
 	VkStructureType e; // save big enum
 	VkPipelineShaderStageCreateInfo ss_vert = {
@@ -39,6 +41,11 @@ void vkhelper_pipeline_configure(
 		.primitiveRestartEnable = VK_FALSE,
 	};
 
+	VkViewport viewport = {
+		0.0f, 0.0f, (float)width, (float)height,
+		0.0, 1.0,
+	};
+	VkRect2D scissor = {{0.0f, 0.0f}, {width, height}};
 	VkPipelineViewportStateCreateInfo vsc = {
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
 		.viewportCount = 1,
@@ -114,13 +121,6 @@ void vkhelper_pipeline_configure(
 		.front.compareOp = VK_COMPARE_OP_ALWAYS,
 	};
 
-	VkPipelineDynamicStateCreateInfo dsi = {
-		.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
-		.pNext = NULL,
-		.flags = 0,
-		.dynamicStateCount = 2,
-	};
-
 	*conf = (VkhelperPipelineConf) {
 		.ss_vert = ss_vert,
 		.ss_frag = ss_frag,
@@ -133,14 +133,11 @@ void vkhelper_pipeline_configure(
 		.cba = cba,
 		.cb = cb,
 		.pl = pl,
-		.dsi = dsi,
-		.dss = {
-			VK_DYNAMIC_STATE_VIEWPORT,
-			VK_DYNAMIC_STATE_SCISSOR,
-		},
+		.viewport = viewport,
+		.scissor = scissor,
 	};
-
-	conf->dsi.pDynamicStates = conf->dss;
+	conf->vsc.pViewports = &conf->viewport;
+	conf->vsc.pScissors = &conf->scissor;
 	conf->cb.pAttachments = &conf->cba;
 }
 
@@ -166,7 +163,6 @@ void vkhelper_pipeline_standard(
 		.pMultisampleState = &conf->multisampling,
 		.pDepthStencilState = &conf->depthstencil,
 		.pColorBlendState = &conf->cb,
-		.pDynamicState = &conf->dsi,
 		.pStages = stages,
 		.layout = *pipelinelayout,
 		.renderPass = renderpass,

@@ -1,5 +1,5 @@
-#ifndef _VKHELPER_BUFFERH
-#define _VKHELPER_BUFFERH
+#ifndef INCLUDEGUARD_VKHELPER_BUFFERH
+#define INCLUDEGUARD_VKHELPER_BUFFERH
 
 #include <vulkan/vulkan.h>
 #include <stdint.h>

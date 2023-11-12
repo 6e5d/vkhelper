@@ -2,6 +2,8 @@
 #include <vulkan/vulkan.h>
 #include <stdlib.h>
 
+#include "../include/memory.h"
+
 uint32_t vkhelper_memory_type_index(
 	VkPhysicalDeviceMemoryProperties memprop,
 	VkMemoryPropertyFlags props,

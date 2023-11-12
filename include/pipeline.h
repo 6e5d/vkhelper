@@ -12,15 +12,17 @@ typedef struct {
 	VkPipelineDepthStencilStateCreateInfo depthstencil;
 	VkPipelineColorBlendAttachmentState cba;
 	VkPipelineColorBlendStateCreateInfo cb;
-	VkPipelineDynamicStateCreateInfo dsi;
-	VkDynamicState dss[2];
 	VkPipelineLayoutCreateInfo pl;
+	VkViewport viewport;
+	VkRect2D scissor;
 } VkhelperPipelineConf;
 
 void vkhelper_pipeline_configure(
 	VkhelperPipelineConf* conf,
 	VkShaderModule vert,
-	VkShaderModule frag
+	VkShaderModule frag,
+	uint32_t width,
+	uint32_t height
 );
 
 void vkhelper_pipeline_standard(

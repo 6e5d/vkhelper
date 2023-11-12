@@ -24,7 +24,7 @@ VkShaderModule vkhelper_shader_module(
 	VkShaderModule shaderModule;
 	assert(0 == vkCreateShaderModule(
 		device, &createInfo, NULL, &shaderModule));
-	printf("loaded: %s\n", path);
+	// printf("loaded: %s\n", path);
 	free(data);
 	return shaderModule;
 }

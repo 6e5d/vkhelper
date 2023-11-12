@@ -84,7 +84,7 @@ VkPhysicalDevice vkhelper_pdev_selector(
 	);
 	VkPhysicalDevice result = VK_NULL_HANDLE;
 	uint32_t best_score = 0;
-	uint32_t best_idx;
+	uint32_t best_idx = 0;
 	for (uint32_t i = 0; i < devcount; i++) {
 		VkPhysicalDevice pdev = pdevs[i];
 		uint32_t family_idx;
@@ -111,7 +111,7 @@ VkPhysicalDevice vkhelper_pdev_selector(
 			score = 1;
 			break;
 		default:
-			printf("unreachable code");
+			printf("unknown device type\n");
 			exit(1); // unreachable
 		}
 		if (score > best_score) {
