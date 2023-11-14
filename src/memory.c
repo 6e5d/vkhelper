@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <vulkan/vulkan.h>
 #include <stdlib.h>
+#include <vulkan/vulkan.h>
 
 #include "../include/memory.h"
 
@@ -19,6 +19,6 @@ uint32_t vkhelper_memory_type_index(
 		type >>= 1;
 	}
 	printf("no suitable memory type %u\n", props);
-	exit(1);
+	abort();
 }
 

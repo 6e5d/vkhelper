@@ -1,8 +1,8 @@
 #ifndef INCLUDEGUARD_VKHELPER_BUFFERH
 #define INCLUDEGUARD_VKHELPER_BUFFERH
 
-#include <vulkan/vulkan.h>
 #include <stdint.h>
+#include <vulkan/vulkan.h>
 
 typedef struct {
 	VkDeviceSize real_size;

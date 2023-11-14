@@ -1,10 +1,9 @@
 #include <assert.h>
 #include <stdbool.h>
-#include <vulkan/vulkan.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <stddef.h>
-#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <vulkan/vulkan.h>
 
 #include "../include/pdev.h"
 
@@ -12,7 +11,7 @@ void vkhelper_depth_format(
 	VkPhysicalDevice pdev,
 	VkFormat *select
 ) {
-	static const VkFormat formats[5] = {
+	static const VkFormat formats[3] = {
 		VK_FORMAT_D32_SFLOAT_S8_UINT,
 		VK_FORMAT_D24_UNORM_S8_UINT,
 		VK_FORMAT_D16_UNORM_S8_UINT,
@@ -20,7 +19,7 @@ void vkhelper_depth_format(
 		// VK_FORMAT_D32_SFLOAT,
 		// VK_FORMAT_D16_UNORM
 	};
-	for (size_t i = 0; i < 5; i += 1) {
+	for (size_t i = 0; i < 3; i += 1) {
 		VkFormat format = formats[i];
 		VkFormatProperties prop;
 		vkGetPhysicalDeviceFormatProperties(pdev, format, &prop);
@@ -33,7 +32,7 @@ void vkhelper_depth_format(
 		}
 	}
 	printf("no suitable depth format\n");
-	exit(1);
+	abort();
 }
 
 static bool check_device_surface_support(
@@ -83,7 +82,7 @@ VkPhysicalDevice vkhelper_pdev_selector(
 		pdevs
 	);
 	VkPhysicalDevice result = VK_NULL_HANDLE;
-	uint32_t best_score = 0;
+	int32_t best_score = -1;
 	uint32_t best_idx = 0;
 	for (uint32_t i = 0; i < devcount; i++) {
 		VkPhysicalDevice pdev = pdevs[i];
@@ -93,26 +92,26 @@ VkPhysicalDevice vkhelper_pdev_selector(
 		}
 		VkPhysicalDeviceProperties properties;
 		vkGetPhysicalDeviceProperties(pdev, &properties);
-		uint32_t score;
+		int32_t score;
 		switch (properties.deviceType) {
 		case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU:
-			score = 5;
-			break;
-		case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU:
 			score = 4;
 			break;
-		case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU:
+		case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU:
 			score = 3;
 			break;
-		case VK_PHYSICAL_DEVICE_TYPE_CPU:
+		case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU:
 			score = 2;
 			break;
-		case VK_PHYSICAL_DEVICE_TYPE_OTHER:
+		case VK_PHYSICAL_DEVICE_TYPE_CPU:
 			score = 1;
+			break;
+		case VK_PHYSICAL_DEVICE_TYPE_OTHER:
+			score = 0;
 			break;
 		default:
 			printf("unknown device type\n");
-			exit(1); // unreachable
+			abort();
 		}
 		if (score > best_score) {
 			result = pdev;
@@ -120,7 +119,7 @@ VkPhysicalDevice vkhelper_pdev_selector(
 			best_idx = family_idx;
 		}
 	}
-	assert(best_score > 0);
+	assert(best_score >= 0);
 	free(pdevs);
 	*result_idx = best_idx;
 	return result;

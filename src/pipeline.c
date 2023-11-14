@@ -1,6 +1,6 @@
 #include <assert.h>
-#include <stdlib.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <vulkan/vulkan.h>
 
 #include "../include/pipeline.h"
@@ -43,9 +43,9 @@ void vkhelper_pipeline_configure(
 
 	VkViewport viewport = {
 		0.0f, 0.0f, (float)width, (float)height,
-		0.0, 1.0,
+		0.0f, 1.0f,
 	};
-	VkRect2D scissor = {{0.0f, 0.0f}, {width, height}};
+	VkRect2D scissor = {{0, 0}, {width, height}};
 	VkPipelineViewportStateCreateInfo vsc = {
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
 		.viewportCount = 1,

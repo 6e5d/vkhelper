@@ -1,5 +1,5 @@
-#include <vulkan/vulkan.h>
 #include <stdint.h>
+#include <vulkan/vulkan.h>
 
 typedef struct {
 	VkPipelineShaderStageCreateInfo ss_vert;

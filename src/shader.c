@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <vulkan/vulkan.h>
 
-#include "../include/shader.h"
 #include "../../wholefile/include/wholefile.h"
+#include "../include/shader.h"
 
 VkShaderModule vkhelper_shader_module(
 	VkDevice device,
@@ -14,7 +14,7 @@ VkShaderModule vkhelper_shader_module(
 	size_t len = wholefile_read(path, (uint8_t**)&data);
 	if (len % 4 != 0) {
 		printf("bad spv shader code!\n");
-		exit(1);
+		abort();
 	}
 	VkShaderModuleCreateInfo createInfo = {
 		.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,

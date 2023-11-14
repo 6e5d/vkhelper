@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <vulkan/vulkan.h>
 
-#include "../include/image.h"
 #include "../include/framebuffer.h"
+#include "../include/image.h"
 
 VkFramebuffer create_framebuffer(
 	VkDevice device,

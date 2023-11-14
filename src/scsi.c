@@ -28,5 +28,6 @@ void vkhelper_scsi(
 			break;
 		}
 	}
+	free(formats);
 	assert(flag);
 }
