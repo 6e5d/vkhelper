@@ -5,16 +5,19 @@
 #include <vulkan/vulkan.h>
 
 typedef struct {
-	VkDeviceSize real_size;
 	VkDeviceMemory memory;
 	VkBuffer buffer;
-	VkDeviceSize size;
-	VkDeviceMemory smemory;
-	VkBuffer sbuffer;
-	VkDeviceSize ssize;
+	VkDeviceSize size; // original
 } VkhelperBuffer;
 
-void vkhelper_buffer_init(
+void vkhelper_buffer_init_cpu(
+	VkhelperBuffer* buffer,
+	VkDeviceSize size,
+	VkDevice device,
+	VkPhysicalDeviceMemoryProperties pdev_memprop
+);
+
+void vkhelper_buffer_init_gpu(
 	VkhelperBuffer* buffer,
 	VkDeviceSize size,
 	VkBufferUsageFlags flags,
@@ -25,14 +28,6 @@ void vkhelper_buffer_init(
 void vkhelper_buffer_deinit(
 	VkhelperBuffer* buffer,
 	VkDevice device
-);
-
-void vkhelper_buffer_sync(
-	VkhelperBuffer* buf,
-	VkDeviceSize size,
-	VkDevice device,
-	VkQueue queue,
-	VkCommandPool cpool
 );
 
 #endif

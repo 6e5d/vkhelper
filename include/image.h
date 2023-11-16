@@ -23,9 +23,10 @@ void vkhelper_image_new(
 	VkPhysicalDeviceMemoryProperties memprop,
 	uint32_t width,
 	uint32_t height,
-	VkFormat format
-);
+	VkFormat format,
+	VkImageUsageFlags usage,
+	VkImageAspectFlags flags);
 
-void vkhelper_image_destroy(VkhelperImage* image, VkDevice device);
+void vkhelper_image_deinit(VkhelperImage* image, VkDevice device);
 
 #endif

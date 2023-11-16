@@ -39,7 +39,9 @@ void vkhelper_image_new(
 	VkPhysicalDeviceMemoryProperties memprop,
 	uint32_t width,
 	uint32_t height,
-	VkFormat format
+	VkFormat format,
+	VkImageUsageFlags usage,
+	VkImageAspectFlags flags
 ) {
 	// image creation
 	{
@@ -52,9 +54,7 @@ void vkhelper_image_new(
 			.arrayLayers = 1,
 			.samples = VK_SAMPLE_COUNT_1_BIT,
 			.tiling = VK_IMAGE_TILING_OPTIMAL,
-			.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT |
-				VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT |
-				VK_IMAGE_USAGE_SAMPLED_BIT,
+			.usage = usage,
 			.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
 		};
 		assert(0 == vkCreateImage(
@@ -85,11 +85,11 @@ void vkhelper_image_new(
 		device,
 		output->image,
 		format,
-		VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT
+		flags
 	);
 }
 
-void vkhelper_image_destroy(VkhelperImage* image, VkDevice device) {
+void vkhelper_image_deinit(VkhelperImage* image, VkDevice device) {
 	vkDestroyImageView(device, image->imageview, NULL);
 	vkFreeMemory(device, image->memory, NULL);
 	vkDestroyImage(device, image->image, NULL);

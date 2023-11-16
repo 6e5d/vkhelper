@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <vulkan/vulkan.h>
 
 #include "../include/cbuf.h"

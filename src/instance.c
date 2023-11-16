@@ -14,22 +14,24 @@ VkInstance vkhelper_instance(void) {
 		"VK_LAYER_KHRONOS_validation"
 	};
 
-	VkApplicationInfo appInfo = {0};
 	const char* appName = "vulkan";
-	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-	appInfo.pApplicationName = appName;
-	appInfo.applicationVersion = VK_MAKE_VERSION(0, 1, 0);
-	appInfo.pEngineName = appName;
-	appInfo.engineVersion = VK_MAKE_VERSION(0, 1, 0);
-	appInfo.apiVersion = VK_API_VERSION_1_2;
+	VkApplicationInfo appInfo = {
+		.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
+		.pApplicationName = appName,
+		.applicationVersion = VK_MAKE_VERSION(0, 1, 0),
+		.pEngineName = appName,
+		.engineVersion = VK_MAKE_VERSION(0, 1, 0),
+		.apiVersion = VK_API_VERSION_1_2,
+	};
 
-	VkInstanceCreateInfo createInfo = {0};
-	createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-	createInfo.pApplicationInfo = &appInfo;
-	createInfo.enabledExtensionCount = sizeof(exts) / sizeof(const char*);
-	createInfo.ppEnabledExtensionNames = exts;
-	createInfo.enabledLayerCount = sizeof(layerNames) / sizeof(const char*);
-	createInfo.ppEnabledLayerNames = layerNames;
+	VkInstanceCreateInfo createInfo = {
+		.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+		.pApplicationInfo = &appInfo,
+		.enabledExtensionCount = sizeof(exts) / sizeof(const char*),
+		.ppEnabledExtensionNames = exts,
+		.enabledLayerCount = sizeof(layerNames) / sizeof(const char*),
+		.ppEnabledLayerNames = layerNames,
+	};
 
 	VkInstance instance = VK_NULL_HANDLE;
 	assert(0 == vkCreateInstance(&createInfo, NULL, &instance));
