@@ -27,7 +27,6 @@ void vkhelper_depth_format(
 			VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
 		{
 			*select = format;
-			printf("selected depth format: %d\n", *select);
 			return;
 		}
 	}
