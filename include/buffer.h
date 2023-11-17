@@ -11,14 +11,14 @@ typedef struct {
 } VkhelperBuffer;
 
 void vkhelper_buffer_init_cpu(
-	VkhelperBuffer* buffer,
+	VkhelperBuffer *buffer,
 	VkDeviceSize size,
 	VkDevice device,
 	VkPhysicalDeviceMemoryProperties pdev_memprop
 );
 
 void vkhelper_buffer_init_gpu(
-	VkhelperBuffer* buffer,
+	VkhelperBuffer *buffer,
 	VkDeviceSize size,
 	VkBufferUsageFlags flags,
 	VkDevice device,
@@ -26,7 +26,7 @@ void vkhelper_buffer_init_gpu(
 );
 
 void vkhelper_buffer_deinit(
-	VkhelperBuffer* buffer,
+	VkhelperBuffer *buffer,
 	VkDevice device
 );
 

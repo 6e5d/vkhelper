@@ -8,9 +8,9 @@
 
 VkShaderModule vkhelper_shader_module(
 	VkDevice device,
-	char* path
+	char *path
 ) {
-	uint32_t* data;
+	uint32_t *data;
 	size_t len = wholefile_read(path, (uint8_t**)&data);
 	if (len % 4 != 0) {
 		printf("bad spv shader code!\n");

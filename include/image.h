@@ -4,7 +4,7 @@
 #include <vulkan/vulkan.h>
 
 void vkhelper_create_imageview(
-	VkImageView* output,
+	VkImageView *output,
 	VkDevice device,
 	VkImage image,
 	VkFormat format,
@@ -18,7 +18,7 @@ typedef struct {
 } VkhelperImage;
 
 void vkhelper_image_new(
-	VkhelperImage* output,
+	VkhelperImage *output,
 	VkDevice device,
 	VkPhysicalDeviceMemoryProperties memprop,
 	uint32_t width,
@@ -27,6 +27,6 @@ void vkhelper_image_new(
 	VkImageUsageFlags usage,
 	VkImageAspectFlags flags);
 
-void vkhelper_image_deinit(VkhelperImage* image, VkDevice device);
+void vkhelper_image_deinit(VkhelperImage *image, VkDevice device);
 
 #endif

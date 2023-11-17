@@ -5,7 +5,7 @@
 #include "../include/memory.h"
 
 void vkhelper_create_imageview(
-	VkImageView* output,
+	VkImageView *output,
 	VkDevice device,
 	VkImage image,
 	VkFormat format,
@@ -34,7 +34,7 @@ void vkhelper_create_imageview(
 }
 
 void vkhelper_image_new(
-	VkhelperImage* output,
+	VkhelperImage *output,
 	VkDevice device,
 	VkPhysicalDeviceMemoryProperties memprop,
 	uint32_t width,
@@ -89,7 +89,7 @@ void vkhelper_image_new(
 	);
 }
 
-void vkhelper_image_deinit(VkhelperImage* image, VkDevice device) {
+void vkhelper_image_deinit(VkhelperImage *image, VkDevice device) {
 	vkDestroyImageView(device, image->imageview, NULL);
 	vkFreeMemory(device, image->memory, NULL);
 	vkDestroyImage(device, image->image, NULL);

@@ -4,17 +4,17 @@
 #include "../include/instance.h"
 
 VkInstance vkhelper_instance(void) {
-	const char* const exts[] = {
+	const char *const exts[] = {
 		"VK_EXT_debug_utils",
 		"VK_KHR_surface",
 		"VK_KHR_wayland_surface"
 	};
 
-	const char* const layerNames[] = {
+	const char *const layerNames[] = {
 		"VK_LAYER_KHRONOS_validation"
 	};
 
-	const char* appName = "vulkan";
+	const char *appName = "vulkan";
 	VkApplicationInfo appInfo = {
 		.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
 		.pApplicationName = appName,

@@ -11,7 +11,7 @@ uint32_t vkhelper_memory_type_index(
 ) {
 	for (uint32_t i = 0; i < memprop.memoryTypeCount; i++) {
 		if ((type & 1) == 1) {
-			VkMemoryType* ty = &memprop.memoryTypes[i];
+			VkMemoryType *ty = &memprop.memoryTypes[i];
 			if ((ty->propertyFlags & props) == props) {
 				return i;
 			}

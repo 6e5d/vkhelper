@@ -5,7 +5,7 @@
 #include "../include/renderpass.h"
 
 void vkhelper_renderpass_config(
-	VkhelperRenderpassConf* conf,
+	VkhelperRenderpassConf *conf,
 	VkDevice device,
 	VkFormat format,
 	VkFormat depth_format
@@ -55,8 +55,8 @@ void vkhelper_renderpass_config(
 }
 
 void vkhelper_renderpass_build(
-	VkRenderPass* result,
-	VkhelperRenderpassConf* conf,
+	VkRenderPass *result,
+	VkhelperRenderpassConf *conf,
 	VkDevice device) {
 	assert(0 == vkCreateRenderPass(device, &conf->info, NULL, result));
 }

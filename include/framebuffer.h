@@ -15,7 +15,7 @@ typedef struct {
 VkFramebuffer create_framebuffer(
 	VkDevice device,
 	VkRenderPass renderpass,
-	VkImageView* attachments,
+	VkImageView *attachments,
 	uint32_t width,
 	uint32_t height
 );

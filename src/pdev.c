@@ -36,13 +36,13 @@ void vkhelper_depth_format(
 }
 
 static bool check_device_surface_support(
-	VkPhysicalDevice pdev, VkSurfaceKHR surface, uint32_t* idx
+	VkPhysicalDevice pdev, VkSurfaceKHR surface, uint32_t *idx
 ) {
 	uint32_t count;
 	vkGetPhysicalDeviceQueueFamilyProperties(pdev, &count, NULL);
 	VkBool32 flag = VK_FALSE;
 	typedef VkQueueFamilyProperties Prop;
-	Prop* families = malloc(sizeof(Prop) * count);
+	Prop *families = malloc(sizeof(Prop)  *count);
 	vkGetPhysicalDeviceQueueFamilyProperties(pdev, &count, families);
 	uint32_t j = 0;
 	for (; j < count; j+=1) {
@@ -70,11 +70,11 @@ static bool check_device_surface_support(
 VkPhysicalDevice vkhelper_pdev_selector(
 	VkInstance instance,
 	VkSurfaceKHR surface,
-	uint32_t* result_idx
+	uint32_t *result_idx
 ) {
 	uint32_t devcount;
 	vkEnumeratePhysicalDevices(instance, &devcount, NULL);
-	VkPhysicalDevice* pdevs = malloc(devcount * sizeof(VkPhysicalDevice));
+	VkPhysicalDevice *pdevs = malloc(devcount  *sizeof(VkPhysicalDevice));
 
 	vkEnumeratePhysicalDevices(
 		instance,

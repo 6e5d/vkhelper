@@ -5,14 +5,14 @@
 #include "../include/device.h"
 
 void vkhelper_device(
-	VkDevice* device,
-	VkQueue* queue,
-	VkCommandPool* cpool,
+	VkDevice *device,
+	VkQueue *queue,
+	VkCommandPool *cpool,
 	VkPhysicalDevice pdev,
 	uint32_t family_idx
 ) {
-	const char* const exts[] = { "VK_KHR_swapchain" };
-	const char* const layers[] = { "VK_LAYER_KHRONOS_validation" };
+	const char *const exts[] = { "VK_KHR_swapchain" };
+	const char *const layers[] = { "VK_LAYER_KHRONOS_validation" };
 
 	float priority = 1;
 	VkDeviceQueueCreateInfo qinfo = {

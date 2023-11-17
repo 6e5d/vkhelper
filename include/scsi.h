@@ -4,8 +4,8 @@
 #include <vulkan/vulkan.h>
 
 void vkhelper_scsi(
-	VkSurfaceFormatKHR* format,
-	VkSurfaceCapabilitiesKHR* caps,
+	VkSurfaceFormatKHR *format,
+	VkSurfaceCapabilitiesKHR *caps,
 	VkPhysicalDevice pdev,
 	VkSurfaceKHR surface
 );

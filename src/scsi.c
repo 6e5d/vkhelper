@@ -6,8 +6,8 @@
 #include "../include/scsi.h"
 
 void vkhelper_scsi(
-	VkSurfaceFormatKHR* format,
-	VkSurfaceCapabilitiesKHR* caps,
+	VkSurfaceFormatKHR *format,
+	VkSurfaceCapabilitiesKHR *caps,
 	VkPhysicalDevice pdev,
 	VkSurfaceKHR surface
 ) {
@@ -16,8 +16,8 @@ void vkhelper_scsi(
 	uint32_t count;
 	assert(0 == vkGetPhysicalDeviceSurfaceFormatsKHR(
 		pdev, surface, &count, NULL));
-	VkSurfaceFormatKHR* formats = malloc(
-		count * sizeof(VkSurfaceFormatKHR));
+	VkSurfaceFormatKHR *formats = malloc(
+		count  *sizeof(VkSurfaceFormatKHR));
 	assert(0 == vkGetPhysicalDeviceSurfaceFormatsKHR(
 		pdev, surface, &count, formats));
 	bool flag = false;

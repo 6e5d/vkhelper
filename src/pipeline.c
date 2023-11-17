@@ -6,7 +6,7 @@
 #include "../include/pipeline.h"
 
 void vkhelper_pipeline_configure(
-	VkhelperPipelineConf* conf,
+	VkhelperPipelineConf *conf,
 	VkShaderModule vert,
 	VkShaderModule frag,
 	uint32_t width,
@@ -142,9 +142,9 @@ void vkhelper_pipeline_configure(
 }
 
 void vkhelper_pipeline_standard(
-	VkPipeline* pipeline,
-	VkPipelineLayout* pipelinelayout,
-	VkhelperPipelineConf* conf,
+	VkPipeline *pipeline,
+	VkPipelineLayout *pipelinelayout,
+	VkhelperPipelineConf *conf,
 	VkRenderPass renderpass,
 	VkDevice device,
 	uint32_t subpass
