@@ -21,8 +21,14 @@ void vkhelper_device(
 		.queueCount = 1,
 		.pQueuePriorities = &priority,
 	};
+	VkPhysicalDeviceDescriptorIndexingFeatures dindex = {
+		.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT,
+		.shaderSampledImageArrayNonUniformIndexing = VK_TRUE,
+		.runtimeDescriptorArray = VK_TRUE,
+	};
 	VkDeviceCreateInfo info = {
 		.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+		.pNext = &dindex,
 		.queueCreateInfoCount = 1,
 		.pQueueCreateInfos = &qinfo,
 		.enabledExtensionCount = sizeof(exts) / sizeof(const char*),
