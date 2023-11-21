@@ -6,7 +6,7 @@
 #include "../include/framebuffer.h"
 #include "../include/image.h"
 
-VkFramebuffer create_framebuffer(
+VkFramebuffer vkhelper_framebuffer_create(
 	VkDevice device,
 	VkRenderPass renderpass,
 	VkImageView *attachments,

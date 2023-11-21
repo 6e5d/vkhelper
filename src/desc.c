@@ -1,28 +1,35 @@
 #include <assert.h>
+#include <stdint.h>
 #include <vulkan/vulkan.h>
 
 #include "../include/desc.h"
 
-void vkhelper_desc_config(VkhelperDescConf *conf) {
+void vkhelper_desc_config(VkhelperDescConf *conf, uint32_t count) {
 	// 1 layout
 	conf->layout_binding = (VkDescriptorSetLayoutBinding) {
 		.binding = 0,
 		.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-		.descriptorCount = 1,
+		.descriptorCount = count,
 		.stageFlags = VK_SHADER_STAGE_VERTEX_BIT |
 			VK_SHADER_STAGE_FRAGMENT_BIT,
 	};
 	conf->layout_ci = (VkDescriptorSetLayoutCreateInfo) {
 		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
-		.pNext = NULL,
+		.pNext = &conf->flags_ci,
 		.flags = 0,
 		.bindingCount = 1,
 		.pBindings = &conf->layout_binding,
 	};
+	conf->flags = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT;
+	conf->flags_ci = (VkDescriptorSetLayoutBindingFlagsCreateInfo) {
+		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO,
+		.bindingCount = 1,
+		.pBindingFlags = &conf->flags,
+	};
 	// 2 pool
 	conf->pool_size = (VkDescriptorPoolSize) {
 		.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-		.descriptorCount = 1,
+		.descriptorCount = count,
 	};
 	conf->pool_ci = (VkDescriptorPoolCreateInfo) {
 		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,

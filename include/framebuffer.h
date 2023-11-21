@@ -12,7 +12,7 @@ typedef struct {
 	VkImageView attachments[2];
 } VkhelperFramebufferImage;
 
-VkFramebuffer create_framebuffer(
+VkFramebuffer vkhelper_framebuffer_create(
 	VkDevice device,
 	VkRenderPass renderpass,
 	VkImageView *attachments,

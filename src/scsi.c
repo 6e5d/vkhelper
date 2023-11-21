@@ -17,7 +17,7 @@ void vkhelper_scsi(
 	assert(0 == vkGetPhysicalDeviceSurfaceFormatsKHR(
 		pdev, surface, &count, NULL));
 	VkSurfaceFormatKHR *formats = malloc(
-		count  *sizeof(VkSurfaceFormatKHR));
+		count * sizeof(VkSurfaceFormatKHR));
 	assert(0 == vkGetPhysicalDeviceSurfaceFormatsKHR(
 		pdev, surface, &count, formats));
 	bool flag = false;

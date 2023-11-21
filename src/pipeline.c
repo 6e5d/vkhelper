@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -5,56 +6,52 @@
 
 #include "../include/pipeline.h"
 
-void vkhelper_pipeline_configure(
-	VkhelperPipelineConf *conf,
-	VkShaderModule vert,
-	VkShaderModule frag,
-	uint32_t width,
-	uint32_t height
-) {
-	VkStructureType e; // save big enum
-	VkPipelineShaderStageCreateInfo ss_vert = {
+void vkhelper_pipeline_config(VkhelperPipelineConfig *vpc,
+	uint32_t vbc, uint32_t vac, uint32_t sets) {
+	vpc->desc = malloc((size_t)sets * sizeof(VkDescriptorSetLayout));
+	vpc->plci = (VkPipelineLayoutCreateInfo) {
+		.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+		.setLayoutCount = sets,
+		.pushConstantRangeCount = 0,
+	};
+
+	vpc->via = malloc(sizeof(VkVertexInputAttributeDescription) * vac);
+	vpc->vib = malloc(sizeof(VkVertexInputBindingDescription) * vbc);
+
+	vpc->stages[0] = (VkPipelineShaderStageCreateInfo) {
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
 		.stage = VK_SHADER_STAGE_VERTEX_BIT,
-		.module = vert,
 		.pName = "main",
 	};
 
-	VkPipelineShaderStageCreateInfo ss_frag = {
+	vpc->stages[1] = (VkPipelineShaderStageCreateInfo) {
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
 		.stage = VK_SHADER_STAGE_FRAGMENT_BIT,
-		.module = frag,
 		.pName = "main",
 	};
 
-	e = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-	VkPipelineVertexInputStateCreateInfo vis = {
-		.sType = e,
-		.vertexBindingDescriptionCount = 0,
-		.vertexAttributeDescriptionCount = 0,
+	vpc->vis = (VkPipelineVertexInputStateCreateInfo) {
+		.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
+		.vertexBindingDescriptionCount = vbc,
+		.pVertexBindingDescriptions = vpc->vib,
+		.vertexAttributeDescriptionCount = vac,
+		.pVertexAttributeDescriptions = vpc->via,
 	};
 
-	e = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-	VkPipelineInputAssemblyStateCreateInfo ias = {
-		.sType = e,
+	vpc->ias = (VkPipelineInputAssemblyStateCreateInfo) {
+		.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
 		.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
 		.primitiveRestartEnable = VK_FALSE,
 	};
 
-	VkViewport viewport = {
-		0.0f, 0.0f, (float)width, (float)height,
-		0.0f, 1.0f,
-	};
-	VkRect2D scissor = {{0, 0}, {width, height}};
-	VkPipelineViewportStateCreateInfo vsc = {
+	vpc->vs = (VkPipelineViewportStateCreateInfo) {
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
 		.viewportCount = 1,
 		.scissorCount = 1,
 	};
 
-	e = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-	VkPipelineRasterizationStateCreateInfo rasterizer = {
-		.sType = e,
+	vpc->rast = (VkPipelineRasterizationStateCreateInfo) {
+		.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
 		.depthClampEnable = VK_FALSE,
 		.rasterizerDiscardEnable = VK_FALSE,
 		.polygonMode = VK_POLYGON_MODE_FILL,
@@ -64,14 +61,13 @@ void vkhelper_pipeline_configure(
 		.depthBiasEnable = VK_FALSE,
 	};
 
-	e = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-	VkPipelineMultisampleStateCreateInfo multisampling = {
-		.sType = e,
+	vpc->ms = (VkPipelineMultisampleStateCreateInfo) {
+		.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
 		.sampleShadingEnable = VK_FALSE,
 		.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT,
 	};
 
-	VkPipelineColorBlendAttachmentState cba = {
+	vpc->cba = (VkPipelineColorBlendAttachmentState) {
 		.colorWriteMask =
 			VK_COLOR_COMPONENT_R_BIT |
 			VK_COLOR_COMPONENT_G_BIT |
@@ -85,12 +81,11 @@ void vkhelper_pipeline_configure(
 		.alphaBlendOp = VK_BLEND_OP_ADD,
 		.blendEnable = VK_TRUE,
 	};
-
-	e = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-	VkPipelineColorBlendStateCreateInfo cb = {
-		.sType = e,
+	vpc->cbs = (VkPipelineColorBlendStateCreateInfo) {
+		.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
 		.logicOpEnable = VK_FALSE,
 		.logicOp = VK_LOGIC_OP_COPY,
+		.pAttachments = &vpc->cba,
 		.attachmentCount = 1,
 		.blendConstants[0] = 0.0f,
 		.blendConstants[1] = 0.0f,
@@ -98,16 +93,8 @@ void vkhelper_pipeline_configure(
 		.blendConstants[3] = 0.0f,
 	};
 
-	VkPipelineLayoutCreateInfo pl = {
-		.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
-		.setLayoutCount = 0,
-		.pushConstantRangeCount = 0,
-	};
-
-	VkStructureType tmp =
-		VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-	VkPipelineDepthStencilStateCreateInfo depthstencil = {
-		.sType = tmp,
+	vpc->dss = (VkPipelineDepthStencilStateCreateInfo) {
+		.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO,
 		.depthTestEnable = VK_TRUE,
 		.depthWriteEnable = VK_TRUE,
 		.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL,
@@ -121,60 +108,53 @@ void vkhelper_pipeline_configure(
 		.front.compareOp = VK_COMPARE_OP_ALWAYS,
 	};
 
-	*conf = (VkhelperPipelineConf) {
-		.ss_vert = ss_vert,
-		.ss_frag = ss_frag,
-		.vis = vis,
-		.ias = ias,
-		.vsc = vsc,
-		.rasterizer = rasterizer,
-		.multisampling = multisampling,
-		.depthstencil = depthstencil,
-		.cba = cba,
-		.cb = cb,
-		.pl = pl,
-		.viewport = viewport,
-		.scissor = scissor,
+	vpc->dy[0] = VK_DYNAMIC_STATE_VIEWPORT;
+	vpc->dy[1] = VK_DYNAMIC_STATE_SCISSOR;
+	vpc->dys = (VkPipelineDynamicStateCreateInfo) {
+		.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
+		.dynamicStateCount = 2,
+		.pDynamicStates = vpc->dy,
 	};
-	conf->vsc.pViewports = &conf->viewport;
-	conf->vsc.pScissors = &conf->scissor;
-	conf->cb.pAttachments = &conf->cba;
+
+	vpc->pci = (VkGraphicsPipelineCreateInfo) {
+		.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
+		.stageCount = 2,
+		.pStages = vpc->stages,
+		.pVertexInputState = &vpc->vis,
+		.pInputAssemblyState = &vpc->ias,
+		.pViewportState = &vpc->vs,
+		.pRasterizationState = &vpc->rast,
+		.pMultisampleState = &vpc->ms,
+		.pDepthStencilState = &vpc->dss,
+		.pColorBlendState = &vpc->cbs,
+		.pDynamicState = &vpc->dys,
+	};
 }
 
-void vkhelper_pipeline_standard(
-	VkPipeline *pipeline,
-	VkPipelineLayout *pipelinelayout,
-	VkhelperPipelineConf *conf,
+void vkhelper_pipeline_build(
+	VkPipelineLayout *layout,
+	VkPipeline *ppl,
+	VkhelperPipelineConfig *vpc,
 	VkRenderPass renderpass,
 	VkDevice device,
 	uint32_t subpass
 ) {
-	VkPipelineShaderStageCreateInfo stages[] =
-		{conf->ss_vert, conf->ss_frag};
-	assert(0 == vkCreatePipelineLayout(
-		device, &conf->pl, NULL, pipelinelayout));
-	VkGraphicsPipelineCreateInfo info = {
-		.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
-		.stageCount = 2,
-		.pVertexInputState = &conf->vis,
-		.pInputAssemblyState = &conf->ias,
-		.pViewportState = &conf->vsc,
-		.pRasterizationState = &conf->rasterizer,
-		.pMultisampleState = &conf->multisampling,
-		.pDepthStencilState = &conf->depthstencil,
-		.pColorBlendState = &conf->cb,
-		.pStages = stages,
-		.layout = *pipelinelayout,
-		.renderPass = renderpass,
-		.subpass = subpass,
-		.basePipelineHandle = VK_NULL_HANDLE,
-	};
+	// all pointers in config should be assigned here
+	// because user call malloc then they gets overwritten
+	vpc->plci.pSetLayouts = vpc->desc;
+	assert(0 == vkCreatePipelineLayout(device, &vpc->plci, NULL, layout));
+	vpc->pci.layout = *layout;
+	vpc->pci.renderPass = renderpass;
+	vpc->pci.subpass = subpass;
 	assert(0 == vkCreateGraphicsPipelines(
-		device,
-		VK_NULL_HANDLE,
-		1,
-		&info,
-		NULL,
-		pipeline
-	));
+		device, VK_NULL_HANDLE, 1, &vpc->pci, NULL, ppl));
+}
+
+void vkhelper_pipeline_config_deinit(
+	VkhelperPipelineConfig *vpc, VkDevice device) {
+	free(vpc->via);
+	free(vpc->vib);
+	free(vpc->desc);
+	vkDestroyShaderModule(device, vpc->stages[0].module, NULL);
+	vkDestroyShaderModule(device, vpc->stages[1].module, NULL);
 }

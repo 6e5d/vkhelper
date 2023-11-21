@@ -24,6 +24,7 @@ void vkhelper_device(
 	VkPhysicalDeviceDescriptorIndexingFeatures dindex = {
 		.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT,
 		.shaderSampledImageArrayNonUniformIndexing = VK_TRUE,
+		.descriptorBindingPartiallyBound = VK_TRUE,
 		.runtimeDescriptorArray = VK_TRUE,
 	};
 	VkDeviceCreateInfo info = {
