@@ -1,4 +1,6 @@
 #include <assert.h>
+#include <math.h>
+#include <stdbool.h>
 #include <vulkan/vulkan.h>
 
 #include "../include/image.h"
@@ -9,12 +11,13 @@ void vkhelper_create_imageview(
 	VkDevice device,
 	VkImage image,
 	VkFormat format,
-	VkImageAspectFlags flags
+	VkImageAspectFlags flags,
+	uint32_t mip
 ) {
 	VkImageSubresourceRange range = {
 		.aspectMask = flags,
 		.baseMipLevel = 0,
-		.levelCount = 1,
+		.levelCount = mip,
 		.baseArrayLayer = 0,
 		.layerCount = 1
 	};
@@ -39,12 +42,23 @@ void vkhelper_image_new(
 	VkPhysicalDeviceMemoryProperties memprop,
 	uint32_t width,
 	uint32_t height,
+	bool mip,
 	VkFormat format,
 	VkImageUsageFlags usage,
 	VkImageAspectFlags flags
 ) {
+	assert(width > 0 && height > 0);
 	output->size[0] = width;
 	output->size[1] = height;
+	uint32_t min = width;
+	if (height < width) {
+		min = height;
+	}
+	if (mip) {
+		output->mip = (uint32_t)floorf(log2f((float)min)) + 1;
+	} else {
+		output->mip = 1;
+	}
 	// image creation
 	{
 		VkImageCreateInfo info = {
@@ -52,7 +66,7 @@ void vkhelper_image_new(
 			.imageType = VK_IMAGE_TYPE_2D,
 			.format = format,
 			.extent = {width, height, 1},
-			.mipLevels = 1,
+			.mipLevels = output->mip,
 			.arrayLayers = 1,
 			.samples = VK_SAMPLE_COUNT_1_BIT,
 			.tiling = VK_IMAGE_TILING_OPTIMAL,
@@ -87,7 +101,8 @@ void vkhelper_image_new(
 		device,
 		output->image,
 		format,
-		flags
+		flags,
+		output->mip
 	);
 }
 

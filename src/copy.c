@@ -18,6 +18,7 @@ void vkhelper_buffer_texture_copy(VkCommandBuffer cbuf,
 
 	VkImageLayout layout1 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 	VkImageLayout layout2 = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+	// TODO: check all subresourcelayer config with mipmap level
 	VkImageSubresourceLayers layers = {
 		.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
 		.layerCount = 1,
@@ -38,7 +39,7 @@ void vkhelper_buffer_texture_copy(VkCommandBuffer cbuf,
 	vkhelper_barrier(cbuf, layout1, layout2,
 		VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
 		VK_PIPELINE_STAGE_TRANSFER_BIT,
-		dst.image);
+		dst);
 	vkCmdCopyBufferToImage(cbuf,
 		src, dst.image,
 		VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
@@ -46,5 +47,5 @@ void vkhelper_buffer_texture_copy(VkCommandBuffer cbuf,
 	vkhelper_barrier(cbuf, layout2, layout1,
 		VK_PIPELINE_STAGE_TRANSFER_BIT,
 		VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-		dst.image);
+		dst);
 }
