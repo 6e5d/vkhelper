@@ -43,6 +43,8 @@ void vkhelper_image_new(
 	VkImageUsageFlags usage,
 	VkImageAspectFlags flags
 ) {
+	output->size[0] = width;
+	output->size[1] = height;
 	// image creation
 	{
 		VkImageCreateInfo info = {

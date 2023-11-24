@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vulkan/vulkan.h>
 
 void vkhelper_barrier(VkCommandBuffer cbuf,

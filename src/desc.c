@@ -1,40 +1,64 @@
 #include <assert.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <vulkan/vulkan.h>
 
 #include "../include/desc.h"
 
-void vkhelper_desc_config(VkhelperDescConf *conf, uint32_t count) {
+void vkhelper_desc_write_image(
+	VkWriteDescriptorSet *write,
+	VkDescriptorImageInfo *info,
+	VkDescriptorSet set,
+	VkImageView imageview,
+	VkSampler sampler,
+	uint32_t binding
+) {
+	*info = (VkDescriptorImageInfo) {
+		.imageView = imageview,
+		.sampler = sampler,
+		.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+	};
+	*write = (VkWriteDescriptorSet) {
+		.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+		.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+		.dstSet = set,
+		.dstBinding = binding,
+		.descriptorCount = 1,
+		.pImageInfo = info,
+	};
+}
+
+void vkhelper_desc_config(VkhelperDescConfig *conf, uint32_t bcount) {
+	assert(bcount > 0);
 	// 1 layout
-	conf->layout_binding = (VkDescriptorSetLayoutBinding) {
+	conf->bindings = malloc(bcount * sizeof(VkDescriptorSetLayoutBinding));
+	assert(conf->bindings);
+	conf->bindings[0] = (VkDescriptorSetLayoutBinding) {
 		.binding = 0,
 		.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-		.descriptorCount = count,
+		.descriptorCount = 1,
 		.stageFlags = VK_SHADER_STAGE_VERTEX_BIT |
 			VK_SHADER_STAGE_FRAGMENT_BIT,
 	};
 	conf->layout_ci = (VkDescriptorSetLayoutCreateInfo) {
 		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
-		.pNext = &conf->flags_ci,
+		// .pNext = &conf->flags_ci,
+		.pNext = NULL,
 		.flags = 0,
-		.bindingCount = 1,
-		.pBindings = &conf->layout_binding,
+		.bindingCount = bcount,
+		.pBindings = conf->bindings,
 	};
-	conf->flags = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT;
-	conf->flags_ci = (VkDescriptorSetLayoutBindingFlagsCreateInfo) {
-		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO,
-		.bindingCount = 1,
-		.pBindingFlags = &conf->flags,
-	};
+
 	// 2 pool
-	conf->pool_size = (VkDescriptorPoolSize) {
+	conf->sizes = malloc(bcount * sizeof(VkDescriptorPoolSize));
+	conf->sizes[0] = (VkDescriptorPoolSize) {
 		.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-		.descriptorCount = count,
+		.descriptorCount = 1,
 	};
 	conf->pool_ci = (VkDescriptorPoolCreateInfo) {
 		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
-		.poolSizeCount = 1,
-		.pPoolSizes = &conf->pool_size,
+		.poolSizeCount = bcount,
+		.pPoolSizes = conf->sizes,
 		.maxSets = 1,
 	};
 	// 3 alloc
@@ -46,7 +70,7 @@ void vkhelper_desc_config(VkhelperDescConf *conf, uint32_t count) {
 
 void vkhelper_desc_build(
 	VkhelperDesc *desc,
-	VkhelperDescConf *conf,
+	VkhelperDescConfig *conf,
 	VkDevice device
 ) {
 	assert(0 == vkCreateDescriptorSetLayout(
@@ -62,4 +86,22 @@ void vkhelper_desc_build(
 void vkhelper_desc_deinit(VkhelperDesc *desc, VkDevice device) {
 	vkDestroyDescriptorSetLayout(device, desc->layout, NULL);
 	vkDestroyDescriptorPool(device, desc->pool, NULL);
+}
+
+void vkhelper_desc_config_image(VkhelperDescConfig *conf, size_t idx) {
+	conf->bindings[idx] = (VkDescriptorSetLayoutBinding) {
+		.binding = (uint32_t)idx,
+		.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+		.descriptorCount = 1,
+		.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT,
+	};
+	conf->sizes[idx] = (VkDescriptorPoolSize) {
+		.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+		.descriptorCount = 1,
+	};
+}
+
+void vkhelper_desc_config_deinit(VkhelperDescConfig *conf) {
+	free(conf->bindings);
+	free(conf->sizes);
 }

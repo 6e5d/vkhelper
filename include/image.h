@@ -1,6 +1,7 @@
 #ifndef VKBASIC_IMAGEH
 #define VKBASIC_IMAGEH
 
+#include <stdint.h>
 #include <vulkan/vulkan.h>
 
 void vkhelper_create_imageview(
@@ -13,6 +14,7 @@ void vkhelper_create_imageview(
 
 typedef struct {
 	VkImage image;
+	uint32_t size[2];
 	VkDeviceMemory memory;
 	VkImageView imageview;
 } VkhelperImage;

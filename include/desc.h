@@ -10,14 +10,12 @@
 #include <vulkan/vulkan.h>
 
 typedef struct {
-	VkDescriptorSetLayoutBinding layout_binding;
-	VkDescriptorSetLayoutBindingFlagsCreateInfo flags_ci;
+	VkDescriptorSetLayoutBinding *bindings;
 	VkDescriptorSetLayoutCreateInfo layout_ci;
-	VkDescriptorPoolSize pool_size;
+	VkDescriptorPoolSize *sizes;
 	VkDescriptorPoolCreateInfo pool_ci;
 	VkDescriptorSetAllocateInfo allocinfo;
-	VkDescriptorBindingFlags flags;
-} VkhelperDescConf;
+} VkhelperDescConfig;
 
 typedef struct {
 	VkDescriptorSetLayout layout;
@@ -25,11 +23,21 @@ typedef struct {
 	VkDescriptorSet set;
 } VkhelperDesc;
 
+// only for single image
+void vkhelper_desc_write_image(
+	VkWriteDescriptorSet *write,
+	VkDescriptorImageInfo *info,
+	VkDescriptorSet set,
+	VkImageView imageview,
+	VkSampler sampler,
+	uint32_t binding);
 // default config for uniform buffer
-void vkhelper_desc_config(VkhelperDescConf *conf, uint32_t count);
+void vkhelper_desc_config(VkhelperDescConfig *conf, uint32_t bcount);
+void vkhelper_desc_config_image(VkhelperDescConfig *conf, size_t idx);
+void vkhelper_desc_config_deinit(VkhelperDescConfig *conf);
 void vkhelper_desc_build(
 	VkhelperDesc *desc,
-	VkhelperDescConf *conf,
+	VkhelperDescConfig *conf,
 	VkDevice device
 );
 void vkhelper_desc_deinit(VkhelperDesc *desc, VkDevice device);

@@ -1,5 +1,4 @@
-#ifndef INCLUDEGUARD_VKHELPER_BUFFERH
-#define INCLUDEGUARD_VKHELPER_BUFFERH
+#pragma once
 
 #include <stdint.h>
 #include <vulkan/vulkan.h>
@@ -29,5 +28,3 @@ void vkhelper_buffer_deinit(
 	VkhelperBuffer *buffer,
 	VkDevice device
 );
-
-#endif
