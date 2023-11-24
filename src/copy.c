@@ -1,24 +1,36 @@
 #include <stdint.h>
 #include <vulkan/vulkan.h>
 
+#include "../../dmgrect/include/dmgrect.h"
 #include "../include/copy.h"
 #include "../include/barrier.h"
 
 // all pixel copy, 1 image 1 layer, do image barrier before and after
 // the target is used as sampler
 void vkhelper_buffer_texture_copy(VkCommandBuffer cbuf,
-	VkBuffer src, VkImage dst, uint32_t width, uint32_t height) {
+	VkBuffer src, VkhelperImage dst, Dmgrect *rect
+) {
+	Dmgrect window = {0};
+	window.size[0] = dst.size[0];
+	window.size[1] = dst.size[1];
+	dmgrect_intersection(&window, rect);
+	if (dmgrect_is_empty(&window)) { return; }
+
 	VkImageLayout layout1 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 	VkImageLayout layout2 = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
 	VkImageSubresourceLayers layers = {
 		.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
 		.layerCount = 1,
 	};
-	VkOffset3D offset = {0, 0, 0};
-	VkExtent3D extent = {width, height, 1};
+	VkOffset3D offset = {window.offset[0], window.offset[1], 0};
+	VkExtent3D extent = {window.size[0], window.size[1], 1};
+	VkDeviceSize buffer_offset =
+		4 * ((VkDeviceSize)window.offset[0] +
+		(VkDeviceSize)window.offset[1] * dst.size[0]);
 	VkBufferImageCopy icopy = {
-		.bufferRowLength = width,
-		.bufferImageHeight = height,
+		.bufferOffset = buffer_offset,
+		.bufferRowLength = dst.size[0],
+		.bufferImageHeight = dst.size[1],
 		.imageSubresource = layers,
 		.imageOffset = offset,
 		.imageExtent = extent,
@@ -26,13 +38,13 @@ void vkhelper_buffer_texture_copy(VkCommandBuffer cbuf,
 	vkhelper_barrier(cbuf, layout1, layout2,
 		VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
 		VK_PIPELINE_STAGE_TRANSFER_BIT,
-		dst);
+		dst.image);
 	vkCmdCopyBufferToImage(cbuf,
-		src, dst,
+		src, dst.image,
 		VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 		1, &icopy);
 	vkhelper_barrier(cbuf, layout2, layout1,
 		VK_PIPELINE_STAGE_TRANSFER_BIT,
 		VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-		dst);
+		dst.image);
 }
