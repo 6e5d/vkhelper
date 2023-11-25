@@ -48,6 +48,7 @@ void vkhelper_image_new(
 	VkImageAspectFlags flags
 ) {
 	assert(width > 0 && height > 0);
+	output->layout = VK_IMAGE_LAYOUT_UNDEFINED;
 	output->size[0] = width;
 	output->size[1] = height;
 	uint32_t min = width;
@@ -103,6 +104,48 @@ void vkhelper_image_new(
 		format,
 		flags,
 		output->mip
+	);
+}
+void vkhelper_image_new_color(
+	VkhelperImage *output,
+	VkDevice device,
+	VkPhysicalDeviceMemoryProperties memprop,
+	uint32_t width,
+	uint32_t height,
+	bool mip,
+	VkImageUsageFlags usage
+) {
+	vkhelper_image_new(
+		output,
+		device,
+		memprop,
+		width,
+		height,
+		mip,
+		VK_FORMAT_B8G8R8A8_UNORM,
+		usage,
+		VK_IMAGE_ASPECT_COLOR_BIT);
+}
+
+void vkhelper_image_new_depthstencil(
+	VkhelperImage *output,
+	VkDevice device,
+	VkPhysicalDeviceMemoryProperties memprop,
+	uint32_t width,
+	uint32_t height,
+	VkFormat format,
+	VkImageUsageFlags usage
+) {
+	vkhelper_image_new(
+		output,
+		device,
+		memprop,
+		width,
+		height,
+		false,
+		format,
+		usage,
+		VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT
 	);
 }
 

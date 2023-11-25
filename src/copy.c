@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdint.h>
 #include <vulkan/vulkan.h>
 
@@ -8,11 +9,11 @@
 // all pixel copy, 1 image 1 layer, do image barrier before and after
 // the target is used as sampler
 void vkhelper_buffer_texture_copy(VkCommandBuffer cbuf,
-	VkBuffer src, VkhelperImage dst, Dmgrect *rect
+	VkBuffer src, VkhelperImage *dst, Dmgrect *rect
 ) {
 	Dmgrect window = {0};
-	window.size[0] = dst.size[0];
-	window.size[1] = dst.size[1];
+	window.size[0] = dst->size[0];
+	window.size[1] = dst->size[1];
 	dmgrect_intersection(&window, rect);
 	if (dmgrect_is_empty(&window)) { return; }
 
@@ -27,24 +28,24 @@ void vkhelper_buffer_texture_copy(VkCommandBuffer cbuf,
 	VkExtent3D extent = {window.size[0], window.size[1], 1};
 	VkDeviceSize buffer_offset =
 		4 * ((VkDeviceSize)window.offset[0] +
-		(VkDeviceSize)window.offset[1] * dst.size[0]);
+		(VkDeviceSize)window.offset[1] * dst->size[0]);
 	VkBufferImageCopy icopy = {
 		.bufferOffset = buffer_offset,
-		.bufferRowLength = dst.size[0],
-		.bufferImageHeight = dst.size[1],
+		.bufferRowLength = dst->size[0],
+		.bufferImageHeight = dst->size[1],
 		.imageSubresource = layers,
 		.imageOffset = offset,
 		.imageExtent = extent,
 	};
-	vkhelper_barrier(cbuf, layout1, layout2,
+	vkhelper_barrier(cbuf, layout2,
 		VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
 		VK_PIPELINE_STAGE_TRANSFER_BIT,
 		dst);
 	vkCmdCopyBufferToImage(cbuf,
-		src, dst.image,
+		src, dst->image,
 		VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 		1, &icopy);
-	vkhelper_barrier(cbuf, layout2, layout1,
+	vkhelper_barrier(cbuf, layout1,
 		VK_PIPELINE_STAGE_TRANSFER_BIT,
 		VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
 		dst);

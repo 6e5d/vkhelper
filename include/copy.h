@@ -7,4 +7,4 @@
 #include "image.h"
 
 void vkhelper_buffer_texture_copy(VkCommandBuffer cbuf,
-	VkBuffer src, VkhelperImage dst, Dmgrect *rect);
+	VkBuffer src, VkhelperImage *dst, Dmgrect *rect);

@@ -14,11 +14,12 @@ void vkhelper_create_imageview(
 	uint32_t mip);
 
 typedef struct {
+	VkDeviceMemory memory;
 	VkImage image;
+	VkImageView imageview;
 	uint32_t size[2];
 	uint32_t mip;
-	VkDeviceMemory memory;
-	VkImageView imageview;
+	VkImageLayout layout;
 } VkhelperImage;
 
 void vkhelper_image_new(
@@ -31,6 +32,24 @@ void vkhelper_image_new(
 	VkFormat format,
 	VkImageUsageFlags usage,
 	VkImageAspectFlags flags);
+
+void vkhelper_image_new_color(
+	VkhelperImage *output,
+	VkDevice device,
+	VkPhysicalDeviceMemoryProperties memprop,
+	uint32_t width,
+	uint32_t height,
+	bool mip,
+	VkImageUsageFlags usage);
+
+void vkhelper_image_new_depthstencil(
+	VkhelperImage *output,
+	VkDevice device,
+	VkPhysicalDeviceMemoryProperties memprop,
+	uint32_t width,
+	uint32_t height,
+	VkFormat format,
+	VkImageUsageFlags usage);
 
 void vkhelper_image_deinit(VkhelperImage *image, VkDevice device);
 
