@@ -41,3 +41,7 @@ void vkhelper_pipeline_build(
 );
 void vkhelper_pipeline_config_deinit(
 	VkhelperPipelineConfig *vpc, VkDevice device);
+
+void vkhelper_pipeline_simple_shader(VkhelperPipelineConfig *vpc,
+	VkDevice device,
+	char *src, char *relative);

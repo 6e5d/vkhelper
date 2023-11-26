@@ -1,10 +1,16 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdint.h>
+#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <vulkan/vulkan.h>
 
+#include "../../ppath/include/ppath.h"
 #include "../include/pipeline.h"
+#include "../include/shader.h"
+
+#define VKHELPER_PATH_LEN 1024
 
 void vkhelper_pipeline_config(VkhelperPipelineConfig *vpc,
 	uint32_t vbc, uint32_t vac, uint32_t sets) {
@@ -129,6 +135,21 @@ void vkhelper_pipeline_config(VkhelperPipelineConfig *vpc,
 		.pColorBlendState = &vpc->cbs,
 		.pDynamicState = &vpc->dys,
 	};
+}
+
+void vkhelper_pipeline_simple_shader(VkhelperPipelineConfig *vpc,
+	VkDevice device,
+	char *src, char *relative
+) {
+	char path[VKHELPER_PATH_LEN];
+	char *new = NULL;
+	snprintf(path, VKHELPER_PATH_LEN, "%s_vert.spv", relative);
+	ppath_rel(&new, src, path);
+	vpc->stages[0].module = vkhelper_shader_module(device, new);
+	snprintf(path, VKHELPER_PATH_LEN, "%s_frag.spv", relative);
+	ppath_rel(&new, src, path);
+	vpc->stages[1].module = vkhelper_shader_module(device, new);
+	free(new);
 }
 
 void vkhelper_pipeline_build(

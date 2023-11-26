@@ -101,3 +101,42 @@ void vkhelper_renderpass_build(
 	VkDevice device) {
 	assert(0 == vkCreateRenderPass(device, &conf->info, NULL, result));
 }
+
+void vkhelper_renderpass_begin(VkCommandBuffer cbuf,
+	VkRenderPass rp,
+	VkFramebuffer fb,
+	uint32_t width, uint32_t height
+) {
+	VkRenderPassBeginInfo rbegin = {
+		.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+		.renderPass = rp,
+		.framebuffer = fb,
+		.renderArea.extent.width = width,
+		.renderArea.extent.height = height,
+	};
+	vkCmdBeginRenderPass(cbuf, &rbegin, VK_SUBPASS_CONTENTS_INLINE);
+}
+
+void vkhelper_renderpass_begin_clear(VkCommandBuffer cbuf,
+	VkRenderPass rp, VkFramebuffer fb,
+	uint32_t width, uint32_t height
+) {
+	static const VkClearValue clear_color = {
+		.color.float32 = {0.0f, 0.0f, 0.0f, 1.0f},
+	};
+	static const VkClearValue clear_depthstencil = {
+		.depthStencil.depth = 1.0f,
+		.depthStencil.stencil = 0,
+	};
+	VkClearValue clears[2] = {clear_color, clear_depthstencil};
+	VkRenderPassBeginInfo rbegin = {
+		.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+		.renderPass = rp,
+		.framebuffer = fb,
+		.renderArea.extent.width = width,
+		.renderArea.extent.height = height,
+		.clearValueCount = 2,
+		.pClearValues = clears,
+	};
+	vkCmdBeginRenderPass(cbuf, &rbegin, VK_SUBPASS_CONTENTS_INLINE);
+}

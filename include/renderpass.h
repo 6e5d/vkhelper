@@ -25,3 +25,13 @@ void vkhelper_renderpass_build(
 	VkhelperRenderpassConfig *conf,
 	VkDevice device
 );
+
+void vkhelper_renderpass_begin(VkCommandBuffer cbuf,
+	VkRenderPass rp, VkFramebuffer fb,
+	uint32_t width, uint32_t height
+);
+
+void vkhelper_renderpass_begin_clear(VkCommandBuffer cbuf,
+	VkRenderPass rp, VkFramebuffer fb,
+	uint32_t width, uint32_t height
+);
