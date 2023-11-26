@@ -1,5 +1,5 @@
-#ifndef VKBASIC_IMAGEH
-#define VKBASIC_IMAGEH
+#ifndef INCLUDEGUARD_VKHELPER_IMAGEH
+#define INCLUDEGUARD_VKHELPER_IMAGEH
 
 #include <stdbool.h>
 #include <stdint.h>
