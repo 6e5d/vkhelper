@@ -4,7 +4,6 @@
 #include <vulkan/vulkan.h>
 
 #include "../include/framebuffer.h"
-#include "../include/image.h"
 
 VkFramebuffer vkhelper_framebuffer_create(
 	VkDevice device,

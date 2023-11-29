@@ -1,3 +1,6 @@
+#ifndef INCLUDEGUARD_VKHELPER_PDEVH
+#define INCLUDEGUARD_VKHELPER_PDEVH
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <vulkan/vulkan.h>
@@ -12,3 +15,5 @@ void vkhelper_depth_format(
 	VkPhysicalDevice pdev,
 	VkFormat *select
 );
+
+#endif

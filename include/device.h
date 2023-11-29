@@ -1,3 +1,6 @@
+#ifndef INCLUDEGUARD_VKHELPER_DEVICEH
+#define INCLUDEGUARD_VKHELPER_DEVICEH
+
 #include <vulkan/vulkan.h>
 
 void vkhelper_device(
@@ -7,3 +10,5 @@ void vkhelper_device(
 	VkPhysicalDevice pdev,
 	uint32_t family_idx
 );
+
+#endif
