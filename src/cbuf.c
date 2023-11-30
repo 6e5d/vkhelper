@@ -1,7 +1,6 @@
-#include <assert.h>
 #include <vulkan/vulkan.h>
 
-#include "../include/cbuf.h"
+#include "../include/vkhelper.h"
 
 VkCommandBuffer vkhelper_cbuf_new(VkCommandPool cpool, VkDevice device) {
 	VkCommandBuffer result;

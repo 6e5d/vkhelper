@@ -1,8 +1,6 @@
-#include <assert.h>
-#include <stdio.h>
 #include <vulkan/vulkan.h>
 
-#include "../include/validation.h"
+#include "../include/vkhelper.h"
 
 #define GET_EXTENSION_FUNCTION(_id) \
 	((PFN_##_id)(vkGetInstanceProcAddr(instance, #_id)))

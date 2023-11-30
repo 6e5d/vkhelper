@@ -1,7 +1,6 @@
-#include <assert.h>
 #include <vulkan/vulkan.h>
 
-#include "../include/instance.h"
+#include "../include/vkhelper.h"
 
 VkInstance vkhelper_instance(void) {
 	const char *const exts[] = {

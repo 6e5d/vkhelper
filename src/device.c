@@ -1,8 +1,6 @@
-#include <assert.h>
-#include <stdlib.h>
 #include <vulkan/vulkan.h>
 
-#include "../include/device.h"
+#include "../include/vkhelper.h"
 
 void vkhelper_device(
 	VkDevice *device,

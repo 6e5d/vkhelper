@@ -1,7 +1,6 @@
-#include <assert.h>
 #include <vulkan/vulkan.h>
 
-#include "../include/semaphore.h"
+#include "../include/vkhelper.h"
 
 VkSemaphore vkhelper_semaphore(VkDevice device) {
 	VkSemaphore result;

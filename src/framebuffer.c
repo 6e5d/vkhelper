@@ -1,9 +1,6 @@
-#include <assert.h>
-#include <stdint.h>
-#include <stdlib.h>
 #include <vulkan/vulkan.h>
 
-#include "../include/framebuffer.h"
+#include "../include/vkhelper.h"
 
 VkFramebuffer vkhelper_framebuffer_create(
 	VkDevice device,

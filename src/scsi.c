@@ -1,9 +1,6 @@
-#include <assert.h>
-#include <stdbool.h>
-#include <stdlib.h>
 #include <vulkan/vulkan.h>
 
-#include "../include/scsi.h"
+#include "../include/vkhelper.h"
 
 void vkhelper_scsi(
 	VkSurfaceFormatKHR *format,
