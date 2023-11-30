@@ -9,7 +9,7 @@ static VkBool32 on_error(
 	VkDebugUtilsMessageSeverityFlagBitsEXT severity,
 	VkDebugUtilsMessageTypeFlagsEXT type,
 	const VkDebugUtilsMessengerCallbackDataEXT *callbackData,
-	void *user
+	void *
 ) {
 	switch (severity) {
 	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
