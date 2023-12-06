@@ -2,10 +2,7 @@
 
 #include "../include/vkhelper.h"
 
-#define GET_EXTENSION_FUNCTION(_id) \
-	((PFN_##_id)(vkGetInstanceProcAddr(instance, #_id)))
-
-static VkBool32 on_error(
+static VKAPI_ATTR VkBool32 on_error(
 	VkDebugUtilsMessageSeverityFlagBitsEXT severity,
 	VkDebugUtilsMessageTypeFlagsEXT type,
 	const VkDebugUtilsMessengerCallbackDataEXT *callbackData,
@@ -45,6 +42,12 @@ static VkBool32 on_error(
 	return 0;
 }
 
+typedef union {
+	PFN_vkCreateDebugUtilsMessengerEXT create;
+	PFN_vkDestroyDebugUtilsMessengerEXT destroy;
+	void (*empty)(void);
+} VkDebugFunc;
+
 VkDebugUtilsMessengerEXT vkhelper_validation_new(VkInstance instance) {
 	VkDebugUtilsMessengerEXT ext;
 	VkDebugUtilsMessengerCreateInfoEXT createInfo = {0};
@@ -60,10 +63,10 @@ VkDebugUtilsMessengerEXT vkhelper_validation_new(VkInstance instance) {
 		VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
 		VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 	createInfo.pfnUserCallback = on_error;
-	assert(0 ==
-		GET_EXTENSION_FUNCTION(vkCreateDebugUtilsMessengerEXT)
-		(instance, &createInfo, NULL, &ext)
-	);
+	VkDebugFunc dbg;
+	dbg.empty = vkGetInstanceProcAddr(instance,
+		"vkCreateDebugUtilsMessengerEXT");
+	assert(0 == dbg.create(instance, &createInfo, NULL, &ext));
 	return ext;
 }
 
@@ -71,8 +74,8 @@ void vkhelper_validation_destroy(
 	VkInstance instance,
 	VkDebugUtilsMessengerEXT msg
 ) {
-	GET_EXTENSION_FUNCTION(vkDestroyDebugUtilsMessengerEXT)
-		(instance, msg, NULL);
+	VkDebugFunc dbg;
+	dbg.empty = vkGetInstanceProcAddr(instance,
+		"vkDestroyDebugUtilsMessengerEXT");
+	dbg.destroy(instance, msg, NULL);
 }
-
-#undef GET_EXTENSION_FUNCTION
