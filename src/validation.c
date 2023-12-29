@@ -2,39 +2,30 @@
 
 #include "../include/vkhelper.h"
 
-static VKAPI_ATTR VkBool32 on_error(
+static VkBool32 on_error(
 	VkDebugUtilsMessageSeverityFlagBitsEXT severity,
 	VkDebugUtilsMessageTypeFlagsEXT type,
-	const VkDebugUtilsMessengerCallbackDataEXT *callbackData,
-	void *
+	VkDebugUtilsMessengerCallbackDataEXT *callbackData,
+	void *data
 ) {
-	switch (severity) {
-	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
+	if (severity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) {
 		printf("(V");
-		break;
-	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+	} else if (severity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) {
 		printf("(I");
-		break;
-	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+	} else if (severity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
 		printf("(W");
-		break;
-	case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+	} else if (severity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
 		printf("(E");
-		break;
-	default:
+	} else {
 		printf("(?");
 	}
-	switch (type) {
-	case VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT:
+	if (type == VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT) {
 		printf("g)");
-		break;
-	case VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT:
+	} else if (type == VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT) {
 		printf("v) ");
-		break;
-	case VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT:
+	} else if (type == VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT) {
 		printf("p)");
-		break;
-	default:
+	} else {
 		printf("?)");
 	}
 
@@ -48,7 +39,7 @@ typedef union {
 	void (*empty)(void);
 } VkDebugFunc;
 
-VkDebugUtilsMessengerEXT vkhelper_validation_new(VkInstance instance) {
+VkDebugUtilsMessengerEXT vkhelper(validation_new)(VkInstance instance) {
 	VkDebugUtilsMessengerEXT ext;
 	VkDebugUtilsMessengerCreateInfoEXT createInfo = {0};
 	createInfo.sType =
@@ -70,7 +61,7 @@ VkDebugUtilsMessengerEXT vkhelper_validation_new(VkInstance instance) {
 	return ext;
 }
 
-void vkhelper_validation_destroy(
+void vkhelper(validation_destroy)(
 	VkInstance instance,
 	VkDebugUtilsMessengerEXT msg
 ) {

@@ -2,7 +2,7 @@
 
 #include "../include/vkhelper.h"
 
-VkSemaphore vkhelper_semaphore(VkDevice device) {
+VkSemaphore vkhelper(semaphore)(VkDevice device) {
 	VkSemaphore result;
 	VkSemaphoreCreateInfo createInfo = {
 		.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
@@ -11,7 +11,7 @@ VkSemaphore vkhelper_semaphore(VkDevice device) {
 	return result;
 }
 
-VkFence vkhelper_fence(VkDevice device) {
+VkFence vkhelper(fence)(VkDevice device) {
 	VkFence result;
 	VkFenceCreateInfo createInfo = {
 		.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,

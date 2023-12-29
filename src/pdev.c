@@ -2,11 +2,11 @@
 
 #include "../include/vkhelper.h"
 
-void vkhelper_depth_format(
+void vkhelper(depth_format)(
 	VkPhysicalDevice pdev,
 	VkFormat *select
 ) {
-	static const VkFormat formats[3] = {
+	VkFormat formats[3] = {
 		VK_FORMAT_D32_SFLOAT_S8_UINT,
 		VK_FORMAT_D24_UNORM_S8_UINT,
 		VK_FORMAT_D16_UNORM_S8_UINT,
@@ -35,8 +35,8 @@ static bool check_device_surface_support(
 	uint32_t count;
 	vkGetPhysicalDeviceQueueFamilyProperties(pdev, &count, NULL);
 	VkBool32 flag = VK_FALSE;
-	typedef VkQueueFamilyProperties Prop;
-	Prop *families = malloc(sizeof(Prop)  *count);
+	VkQueueFamilyProperties *families = malloc(
+		sizeof(VkQueueFamilyProperties) * count);
 	vkGetPhysicalDeviceQueueFamilyProperties(pdev, &count, families);
 	uint32_t j = 0;
 	for (; j < count; j+=1) {
@@ -61,7 +61,7 @@ static bool check_device_surface_support(
 	return true;
 }
 
-VkPhysicalDevice vkhelper_pdev_selector(
+VkPhysicalDevice vkhelper(pdev_selector)(
 	VkInstance instance,
 	VkSurfaceKHR surface,
 	uint32_t *result_idx
@@ -78,7 +78,7 @@ VkPhysicalDevice vkhelper_pdev_selector(
 	VkPhysicalDevice result = VK_NULL_HANDLE;
 	int32_t best_score = -1;
 	uint32_t best_idx = 0;
-	for (uint32_t i = 0; i < devcount; i++) {
+	for (uint32_t i = 0; i < devcount; i += 1) {
 		VkPhysicalDevice pdev = pdevs[i];
 		uint32_t family_idx;
 		if (!check_device_surface_support(pdev, surface, &family_idx)) {
@@ -87,23 +87,18 @@ VkPhysicalDevice vkhelper_pdev_selector(
 		VkPhysicalDeviceProperties properties;
 		vkGetPhysicalDeviceProperties(pdev, &properties);
 		int32_t score;
-		switch (properties.deviceType) {
-		case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU:
+		VkPhysicalDeviceType ty = properties.deviceType;
+		if (ty == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
 			score = 4;
-			break;
-		case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU:
+		} else if (ty == VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU) {
 			score = 3;
-			break;
-		case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU:
+		} else if (ty == VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU) {
 			score = 2;
-			break;
-		case VK_PHYSICAL_DEVICE_TYPE_CPU:
+		} else if (ty == VK_PHYSICAL_DEVICE_TYPE_CPU) {
 			score = 1;
-			break;
-		case VK_PHYSICAL_DEVICE_TYPE_OTHER:
+		} else if (ty == VK_PHYSICAL_DEVICE_TYPE_OTHER) {
 			score = 0;
-			break;
-		default:
+		} else {
 			printf("unknown device type\n");
 			abort();
 		}
@@ -119,7 +114,7 @@ VkPhysicalDevice vkhelper_pdev_selector(
 	return result;
 }
 
-void vkhelper_pdev_print(VkPhysicalDevice pdev) {
+void vkhelper(pdev_print)(VkPhysicalDevice pdev) {
 	VkPhysicalDeviceProperties prop;
 	vkGetPhysicalDeviceProperties(pdev, &prop);
 	// printf("api version: %d\n", prop.apiVersion);

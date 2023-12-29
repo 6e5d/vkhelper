@@ -2,7 +2,7 @@
 
 #include "../include/vkhelper.h"
 
-void vkhelper_scsi(
+void vkhelper(scsi)(
 	VkSurfaceFormatKHR *format,
 	VkSurfaceCapabilitiesKHR *caps,
 	VkPhysicalDevice pdev,
@@ -18,7 +18,7 @@ void vkhelper_scsi(
 	assert(0 == vkGetPhysicalDeviceSurfaceFormatsKHR(
 		pdev, surface, &count, formats));
 	bool flag = false;
-	for (uint32_t i = 0; i < count; i++) {
+	for (uint32_t i = 0; i < count; i += 1) {
 		if (formats[i].format == VK_FORMAT_B8G8R8A8_UNORM) {
 			*format = formats[i];
 			flag = true;

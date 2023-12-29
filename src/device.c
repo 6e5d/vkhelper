@@ -2,15 +2,15 @@
 
 #include "../include/vkhelper.h"
 
-void vkhelper_device(
+void vkhelper(device)(
 	VkDevice *device,
 	VkQueue *queue,
 	VkCommandPool *cpool,
 	VkPhysicalDevice pdev,
 	uint32_t family_idx
 ) {
-	const char *const exts[] = { "VK_KHR_swapchain" };
-	const char *const layers[] = { "VK_LAYER_KHRONOS_validation" };
+	char *exts[1] = { "VK_KHR_swapchain" };
+	char *layers[1] = { "VK_LAYER_KHRONOS_validation" };
 
 	float priority = 1;
 	VkDeviceQueueCreateInfo qinfo = {
@@ -30,9 +30,9 @@ void vkhelper_device(
 		.pNext = &dindex,
 		.queueCreateInfoCount = 1,
 		.pQueueCreateInfos = &qinfo,
-		.enabledExtensionCount = sizeof(exts) / sizeof(const char*),
+		.enabledExtensionCount = 1,
 		.ppEnabledExtensionNames = exts,
-		.enabledLayerCount = sizeof(layers) / sizeof(const char*),
+		.enabledLayerCount = 1,
 		.ppEnabledLayerNames = layers,
 	};
 	assert(0 == vkCreateDevice(pdev, &info, NULL, device));

@@ -2,18 +2,18 @@
 
 #include "../include/vkhelper.h"
 
-VkInstance vkhelper_instance(void) {
-	const char *const exts[] = {
+VkInstance vkhelper(instance)(void) {
+	char *exts[3] = {
 		"VK_EXT_debug_utils",
 		"VK_KHR_surface",
 		"VK_KHR_wayland_surface"
 	};
 
-	const char *const layerNames[] = {
+	char *layerNames[1] = {
 		"VK_LAYER_KHRONOS_validation"
 	};
 
-	const char *appName = "vulkan";
+	char *appName = "vulkan";
 	VkApplicationInfo appInfo = {
 		.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
 		.pApplicationName = appName,
@@ -26,9 +26,9 @@ VkInstance vkhelper_instance(void) {
 	VkInstanceCreateInfo createInfo = {
 		.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
 		.pApplicationInfo = &appInfo,
-		.enabledExtensionCount = sizeof(exts) / sizeof(const char*),
+		.enabledExtensionCount = 3,
 		.ppEnabledExtensionNames = exts,
-		.enabledLayerCount = sizeof(layerNames) / sizeof(const char*),
+		.enabledLayerCount = 1,
 		.ppEnabledLayerNames = layerNames,
 	};
 

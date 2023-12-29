@@ -2,7 +2,7 @@
 
 #include "../include/vkhelper.h"
 
-VkCommandBuffer vkhelper_cbuf_new(VkCommandPool cpool, VkDevice device) {
+VkCommandBuffer vkhelper(cbuf_new)(VkCommandPool cpool, VkDevice device) {
 	VkCommandBuffer result;
 	VkCommandBufferAllocateInfo info = {
 		.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,

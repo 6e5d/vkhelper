@@ -3,9 +3,9 @@
 
 #include <vulkan/vulkan.h>
 
-VkCommandBuffer vkhelper_cbuf_new(VkCommandPool cpool, VkDevice device);
+VkCommandBuffer vkhelper(cbuf_new)(VkCommandPool cpool, VkDevice device);
 
-void vkhelper_device(
+void vkhelper(device)(
 	VkDevice *device,
 	VkQueue *queue,
 	VkCommandPool *cpool,
@@ -20,9 +20,9 @@ typedef struct {
 	// thus has to be manually destroyed
 	// second image is copied from VkhelperSwapchain.depth.imageview
 	VkImageView attachments[2];
-} VkhelperFramebufferImage;
+} Vkhelper(FramebufferImage);
 
-VkFramebuffer vkhelper_framebuffer_create(
+VkFramebuffer vkhelper(framebuffer_create)(
 	VkDevice device,
 	VkRenderPass renderpass,
 	VkImageView *attachments,
@@ -30,31 +30,31 @@ VkFramebuffer vkhelper_framebuffer_create(
 	uint32_t height
 );
 
-VkInstance vkhelper_instance(void);
+VkInstance vkhelper(instance)(void);
 
-VkPhysicalDevice vkhelper_pdev_selector(
+VkPhysicalDevice vkhelper(pdev_selector)(
 	VkInstance instance,
 	VkSurfaceKHR surface,
 	uint32_t *result_idx
 );
-void vkhelper_pdev_print(VkPhysicalDevice pdev);
-void vkhelper_depth_format(
+void vkhelper(pdev_print)(VkPhysicalDevice pdev);
+void vkhelper(depth_format)(
 	VkPhysicalDevice pdev,
 	VkFormat *select
 );
 
-void vkhelper_scsi(
+void vkhelper(scsi)(
 	VkSurfaceFormatKHR *format,
 	VkSurfaceCapabilitiesKHR *caps,
 	VkPhysicalDevice pdev,
 	VkSurfaceKHR surface
 );
 
-VkFence vkhelper_fence(VkDevice device);
-VkSemaphore vkhelper_semaphore(VkDevice device);
+VkFence vkhelper(fence)(VkDevice device);
+VkSemaphore vkhelper(semaphore)(VkDevice device);
 
-VkDebugUtilsMessengerEXT vkhelper_validation_new(VkInstance instance);
-void vkhelper_validation_destroy(
+VkDebugUtilsMessengerEXT vkhelper(validation_new)(VkInstance instance);
+void vkhelper(validation_destroy)(
 	VkInstance instance,
 	VkDebugUtilsMessengerEXT msg
 );
