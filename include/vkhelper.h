@@ -1,6 +1,3 @@
-#ifndef INCLUDEGUARD_VKHELPER
-#define INCLUDEGUARD_VKHELPER
-
 #include <vulkan/vulkan.h>
 
 VkCommandBuffer vkhelper(cbuf_new)(VkCommandPool cpool, VkDevice device);
@@ -58,5 +55,3 @@ void vkhelper(validation_destroy)(
 	VkInstance instance,
 	VkDebugUtilsMessengerEXT msg
 );
-
-#endif
